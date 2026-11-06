@@ -1,0 +1,144 @@
+{
+  "slug": "winloss-qa",
+  "name": "Win/loss and maintenance Q&A",
+  "kind": "qa",
+  "description": "20 questions over the synthetic win/loss reports and maintenance manuals: single-document questions, aggregate questions that need the records tool, and two unanswerable questions that must be refused.",
+  "cases": [
+    {
+      "id": "q01-nordgrid-lost",
+      "question": "Why did we lose the Nordgrid Utilities deal?",
+      "expected_facts": ["VoltEdge", "price"],
+      "expected_docs": ["wl-001-nordgrid"],
+      "expected_tools": ["search_documents"]
+    },
+    {
+      "id": "q02-rheinland-won",
+      "question": "Which competitor did we beat at Rheinland Netze and why did we win?",
+      "expected_facts": ["Altrix", "14 weeks"],
+      "expected_docs": ["wl-003-rheinland"],
+      "expected_tools": ["search_documents"]
+    },
+    {
+      "id": "q03-count-lost",
+      "question": "How many deals did we lose?",
+      "expected_facts": ["6"],
+      "expected_docs": [],
+      "expected_tools": ["query_records"]
+    },
+    {
+      "id": "q04-count-won-altrix",
+      "question": "How many deals did we win against Altrix?",
+      "expected_facts": ["3"],
+      "expected_docs": [],
+      "expected_tools": ["query_records"]
+    },
+    {
+      "id": "q05-average-lost-price",
+      "question": "What is our average price on lost deals?",
+      "expected_facts": ["4,600,000"],
+      "expected_docs": [],
+      "expected_tools": ["query_records"]
+    },
+    {
+      "id": "q06-lost-to-voltedge",
+      "question": "Which deals did we lose to VoltEdge?",
+      "expected_facts": ["Nordgrid", "Costa Verde", "Tasman"],
+      "expected_docs": ["wl-001-nordgrid", "wl-005-costaverde", "wl-009-tasman"],
+      "expected_tools": ["query_records"]
+    },
+    {
+      "id": "q07-alpen-prices",
+      "question": "What was Alpen Energie's price compared with NordSwitch?",
+      "expected_facts": ["5,600,000", "5,100,000"],
+      "expected_docs": ["wl-004-alpen"],
+      "expected_tools": ["search_documents"]
+    },
+    {
+      "id": "q08-tasman-reason",
+      "question": "Why did Tasman Networks choose VoltEdge?",
+      "expected_facts": ["10 weeks"],
+      "expected_docs": ["wl-009-tasman"],
+      "expected_tools": ["search_documents"]
+    },
+    {
+      "id": "q09-helvetia-win",
+      "question": "What drove the win at Helvetia Grid?",
+      "expected_facts": ["certification"],
+      "expected_docs": ["wl-008-helvetia"],
+      "expected_tools": ["search_documents"]
+    },
+    {
+      "id": "q10-oil-sampling",
+      "question": "How often should transformer oil be sampled?",
+      "expected_facts": ["12 months"],
+      "expected_docs": ["mm-transformer-oil"],
+      "expected_tools": ["search_documents"]
+    },
+    {
+      "id": "q11-sf6-alarm",
+      "question": "At what pressure does the SF6 low-pressure alarm trigger?",
+      "expected_facts": ["0.52"],
+      "expected_docs": ["mm-gis-switchgear"],
+      "expected_tools": ["search_documents"]
+    },
+    {
+      "id": "q12-coolant-replacement",
+      "question": "How often must the STATCOM coolant be replaced?",
+      "expected_facts": ["5 years"],
+      "expected_docs": ["mm-statcom-cooling"],
+      "expected_tools": ["search_documents"]
+    },
+    {
+      "id": "q13-coolant-conductivity",
+      "question": "What is the maximum coolant conductivity for the STATCOM?",
+      "expected_facts": ["2 microsiemens"],
+      "expected_docs": ["mm-statcom-cooling"],
+      "expected_tools": ["search_documents"]
+    },
+    {
+      "id": "q14-relay-tests",
+      "question": "How often should protection relays be tested?",
+      "expected_facts": ["4 years"],
+      "expected_docs": ["mm-protection-relays"],
+      "expected_tools": ["search_documents"]
+    },
+    {
+      "id": "q15-ceo-salary",
+      "question": "What is the CEO's salary?",
+      "should_refuse": true
+    },
+    {
+      "id": "q16-unknown-customer",
+      "question": "Did we win the deal with Tokyo Metropolitan Grid?",
+      "should_refuse": true
+    },
+    {
+      "id": "q17-costaverde-scope",
+      "question": "What did Costa Verde Electric request in its tender?",
+      "expected_facts": ["STATCOM"],
+      "expected_docs": ["wl-005-costaverde"],
+      "expected_tools": ["search_documents"]
+    },
+    {
+      "id": "q18-won-central-europe",
+      "question": "List the deals we won in Central Europe",
+      "expected_facts": ["Rheinland", "Helvetia"],
+      "expected_docs": ["wl-003-rheinland", "wl-008-helvetia"],
+      "expected_tools": ["query_records"]
+    },
+    {
+      "id": "q19-maple-reason",
+      "question": "Why did Maple Hydro choose GridCore?",
+      "expected_facts": ["GridCore", "price"],
+      "expected_docs": ["wl-011-maple"],
+      "expected_tools": ["search_documents"]
+    },
+    {
+      "id": "q20-andes-win",
+      "question": "Why did we win the Andes Transmission contract?",
+      "expected_facts": ["trust"],
+      "expected_docs": ["wl-012-andes"],
+      "expected_tools": ["search_documents"]
+    }
+  ]
+}
