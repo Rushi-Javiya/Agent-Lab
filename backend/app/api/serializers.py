@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from datetime import UTC, datetime
+
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -13,6 +15,15 @@ from ..models import (
     EvalDataset,
     EvalRun,
 )
+
+
+def iso(value: datetime | None) -> str | None:
+    """SQLite drops the timezone. All stored times are UTC, so say so explicitly."""
+    if value is None:
+        return None
+    if value.tzinfo is None:
+        value = value.replace(tzinfo=UTC)
+    return value.isoformat()
 
 
 def latest_eval(session: Session, version_id: int) -> dict | None:
@@ -39,7 +50,7 @@ def version_out(session: Session, version: AgentVersion) -> dict:
         "version": version.version,
         "config": version.config,
         "note": version.note,
-        "created_at": version.created_at,
+        "created_at": iso(version.created_at),
         "latest_eval": latest_eval(session, version.id),
     }
 
@@ -52,7 +63,7 @@ def agent_summary(session: Session, agent: Agent) -> dict:
         "name": agent.name,
         "description": agent.description,
         "kind": agent.kind,
-        "created_at": agent.created_at,
+        "created_at": iso(agent.created_at),
         "version_count": len(agent.versions),
         "latest_version": version_out(session, latest) if latest else None,
     }
@@ -81,7 +92,7 @@ def run_out(run: AgentRun, version_number: int | None = None) -> dict:
         "completion_tokens": run.completion_tokens,
         "llm_calls": run.llm_calls,
         "error": run.error,
-        "created_at": run.created_at,
+        "created_at": iso(run.created_at),
     }
 
 
@@ -99,8 +110,8 @@ def eval_run_out(session: Session, run: EvalRun, include_results: bool = False) 
         "progress": {"done": run.progress_done, "total": run.progress_total},
         "summary": run.summary,
         "error": run.error,
-        "created_at": run.created_at,
-        "finished_at": run.finished_at,
+        "created_at": iso(run.created_at),
+        "finished_at": iso(run.finished_at),
     }
     if include_results:
         out["results"] = [
@@ -130,8 +141,8 @@ def benchmark_out(run: BenchmarkRun) -> dict:
         "repeats": run.repeats,
         "progress": {"done": run.progress_done, "total": run.progress_total},
         "error": run.error,
-        "created_at": run.created_at,
-        "finished_at": run.finished_at,
+        "created_at": iso(run.created_at),
+        "finished_at": iso(run.finished_at),
         "results": [
             {
                 "id": r.id,

@@ -87,6 +87,18 @@ def test_run_agent_and_list_runs(client):
     assert len(runs) == 1 and runs[0]["id"] == run["id"]
 
 
+def test_timestamps_are_explicit_utc(client):
+    agent = client.get("/api/agents/winloss-rag").json()
+    assert agent["created_at"].endswith("+00:00")
+    run = client.post(
+        "/api/agents/winloss-rag/run", json={"question": "How many deals did we lose?"}
+    )
+    assert run.json()["created_at"].endswith("+00:00")
+    eval_run = client.get(f"/api/evals/runs/{start_eval(client, 1)['id']}").json()
+    assert eval_run["created_at"].endswith("+00:00")
+    assert eval_run["finished_at"].endswith("+00:00")
+
+
 def test_run_agent_not_found_cases(client):
     assert client.post("/api/agents/nope/run", json={"question": "x"}).status_code == 404
     missing_version = client.post(
