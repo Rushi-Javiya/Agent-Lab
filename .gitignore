@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Local data and secrets
+.env
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+backend/agentlab.db*
+
+# Node
+node_modules/
+dist/
+.vite/
+coverage/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
