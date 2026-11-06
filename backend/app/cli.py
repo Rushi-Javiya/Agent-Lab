@@ -88,9 +88,8 @@ def cmd_eval(args: argparse.Namespace) -> int:
 
     print()
     print(f"mean score : {summary['mean_score']:.3f}")
-    print(
-        f"pass rate  : {summary['pass_rate']:.1%} ({summary['cases'] - len(failed)}/{summary['cases']})"
-    )
+    passed = summary["cases"] - len(failed)
+    print(f"pass rate  : {summary['pass_rate']:.1%} ({passed}/{summary['cases']})")
     print(f"latency    : mean {summary['mean_latency_ms']} ms, p95 {summary['p95_latency_ms']} ms")
     print(f"statuses   : {summary['statuses']}")
     for name, value in summary["metrics"].items():
