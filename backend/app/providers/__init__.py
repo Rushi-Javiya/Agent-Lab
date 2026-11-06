@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
+
 import httpx
 
 from ..config import Settings
@@ -56,14 +58,17 @@ def get_provider(
     raise ProviderError(f"Unknown provider '{name}'. Use one of {', '.join(PROVIDER_NAMES)}.")
 
 
+def _check(name: str, settings: Settings) -> tuple[str, dict]:
+    provider = get_provider(name, settings)
+    available = provider.is_available()
+    return name, {"available": available, "models": provider.list_models() if available else []}
+
+
 def provider_status(settings: Settings) -> dict[str, dict]:
-    """Availability and models for each provider, used by the health endpoint and the UI."""
-    status: dict[str, dict] = {}
-    for name in PROVIDER_NAMES:
-        provider = get_provider(name, settings)
-        available = provider.is_available()
-        status[name] = {
-            "available": available,
-            "models": provider.list_models() if available else [],
-        }
-    return status
+    """Availability and models for each provider, used by the health endpoint and the UI.
+
+    The providers are checked in parallel, so one unreachable server cannot slow the others down.
+    """
+    with ThreadPoolExecutor(max_workers=len(PROVIDER_NAMES)) as pool:
+        results = dict(pool.map(lambda name: _check(name, settings), PROVIDER_NAMES))
+    return {name: results[name] for name in PROVIDER_NAMES}

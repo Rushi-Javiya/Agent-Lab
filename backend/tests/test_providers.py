@@ -90,6 +90,29 @@ def test_mock_unknown_model_is_an_error():
         get_provider("mock", Settings()).chat("gpt-99", msg("hi"))
 
 
+def test_provider_status_covers_every_provider_and_works_without_servers(monkeypatch):
+    from app import providers
+
+    class Down:
+        def is_available(self) -> bool:
+            return False
+
+        def list_models(self) -> list[str]:
+            return []
+
+    real = providers.get_provider
+    monkeypatch.setattr(
+        providers,
+        "get_provider",
+        lambda name, s, t=None: real(name, s) if name == "mock" else Down(),
+    )
+    status = providers.provider_status(Settings())
+    assert list(status) == list(providers.PROVIDER_NAMES)
+    assert status["mock"]["available"] is True
+    assert status["mock"]["models"] == ["mock-extractive", "mock-sloppy"]
+    assert status["ollama"] == {"available": False, "models": []}
+
+
 def test_unknown_provider_is_an_error():
     with pytest.raises(ProviderError):
         get_provider("nope", Settings())
