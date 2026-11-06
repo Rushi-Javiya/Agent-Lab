@@ -143,6 +143,17 @@ def test_ollama_http_error_becomes_provider_error():
         provider.chat("nope", msg("hi"))
 
 
+def test_connection_errors_become_provider_errors():
+    def boom(request: httpx.Request) -> httpx.Response:
+        raise httpx.ConnectError("refused")
+
+    transport = httpx.MockTransport(boom)
+    with pytest.raises(ProviderError, match="Could not reach Ollama"):
+        OllamaProvider("http://x", transport=transport).chat("m", msg("hi"))
+    with pytest.raises(ProviderError, match="Could not reach llamacpp"):
+        OpenAICompatProvider("llamacpp", "http://x/v1", transport=transport).chat("m", msg("hi"))
+
+
 def test_ollama_lists_models_and_reports_unavailable():
     ok = httpx.MockTransport(lambda r: httpx.Response(200, json={"models": [{"name": "llama3.2"}]}))
     provider = OllamaProvider("http://x", transport=ok)

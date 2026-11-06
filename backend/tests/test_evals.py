@@ -225,7 +225,7 @@ def test_execute_eval_run_stores_results_and_summary(db, corpus, data_dir):
 
 
 def test_eval_run_with_unreachable_provider_ends_as_completed_with_error_cases(
-    db, corpus, data_dir
+    db, corpus, data_dir, unreachable
 ):
     """Provider failures are scored as 0 per case, they do not crash the run."""
     from app.agents.registry import create_agent
@@ -241,8 +241,7 @@ def test_eval_run_with_unreachable_provider_ends_as_completed_with_error_cases(
         session.flush()
         run_id = run.id
 
-    settings = Settings(ollama_url="http://127.0.0.1:9", request_timeout_s=1)
-    summary = execute_eval_run(db, corpus, settings, run_id)
+    summary = execute_eval_run(db, corpus, Settings(), run_id)
     assert summary["statuses"] == {"error": 2}
     assert summary["mean_score"] == 0.0
     assert summary["pass_rate"] == 0.0

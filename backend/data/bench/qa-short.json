@@ -1,0 +1,15 @@
+{
+  "slug": "qa-short",
+  "name": "Short grounded questions",
+  "description": "Eight questions answered from the top 2 retrieved chunks. Measures speed and whether a model can use the context and cite it.",
+  "prompts": [
+    {"id": "b1", "question": "Why did we lose the Nordgrid Utilities deal?", "expected_facts": ["VoltEdge", "price"]},
+    {"id": "b2", "question": "Which competitor did we beat at Rheinland Netze and why did we win?", "expected_facts": ["Altrix", "14 weeks"]},
+    {"id": "b3", "question": "What was Alpen Energie's price compared with NordSwitch?", "expected_facts": ["5,600,000", "5,100,000"]},
+    {"id": "b4", "question": "Why did Tasman Networks choose VoltEdge?", "expected_facts": ["10 weeks"]},
+    {"id": "b5", "question": "What drove the win at Helvetia Grid?", "expected_facts": ["certification"]},
+    {"id": "b6", "question": "How often should transformer oil be sampled?", "expected_facts": ["12 months"]},
+    {"id": "b7", "question": "At what pressure does the SF6 low-pressure alarm trigger?", "expected_facts": ["0.52"]},
+    {"id": "b8", "question": "How often should protection relays be tested?", "expected_facts": ["4 years"]}
+  ]
+}
