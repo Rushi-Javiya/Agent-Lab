@@ -23,6 +23,7 @@ class ToolOutput:
     result_lines: list[str] = field(default_factory=list)
     allowed_chunk_ids: set[str] = field(default_factory=set)
     allowed_doc_ids: set[str] = field(default_factory=set)
+    retrieved: list[str] = field(default_factory=list)
     summary: str = ""
     latency_ms: float = 0.0
     empty: bool = False
@@ -33,6 +34,7 @@ class ToolOutput:
             "name": self.name,
             "args": self.args,
             "summary": self.summary,
+            "retrieved": self.retrieved,
             "latency_ms": round(self.latency_ms, 2),
         }
 
@@ -84,6 +86,7 @@ class ToolBox:
             output.context_blocks.append(f"[{chunk.chunk_id}]\n{chunk.text}")
             output.allowed_chunk_ids.add(chunk.chunk_id)
             output.allowed_doc_ids.add(chunk.doc_id)
+            output.retrieved.append(chunk.chunk_id)
         output.summary = f"{len(hits)} chunks: " + ", ".join(
             f"{h.chunk.chunk_id} ({h.score:.2f})" for h in hits
         )
@@ -133,9 +136,11 @@ class ToolBox:
                 f"[{row.doc_id}] Customer: {row.customer} | region: {row.region} | "
                 f"date: {row.deal_date} | outcome: {row.outcome} | "
                 f"our price: {_eur(row.our_price_eur)} | competitor: {row.competitor} | "
-                f"competitor price: {_eur(row.competitor_price_eur)} | reason: {row.reason_category}"
+                f"competitor price: {_eur(row.competitor_price_eur)} | "
+                f"reason: {row.reason_category}"
             )
             output.allowed_doc_ids.add(row.doc_id)
+            output.retrieved.append(row.doc_id)
         output.summary = f"{len(rows)} records; {output.result_lines[0]}"
         output.latency_ms = (time.perf_counter() - started) * 1000
         return output

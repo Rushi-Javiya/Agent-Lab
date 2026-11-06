@@ -8,6 +8,10 @@ def test_tokenize_drops_stopwords_and_lowercases():
     assert tokenize("Why did we LOSE the Nordgrid deal?") == ["los", "nordgrid", "deal"]
 
 
+def test_possessive_does_not_leave_a_stray_letter():
+    assert tokenize("What is the CEO's salary?") == ["ceo", "salary"]
+
+
 def test_stemmer_connects_word_forms():
     assert tokenize("lost") == tokenize("lose") == tokenize("losing")
     assert tokenize("sampled") == tokenize("sampling") == tokenize("sample")

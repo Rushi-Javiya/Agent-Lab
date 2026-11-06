@@ -34,7 +34,8 @@ def stem(token: str) -> str:
 
 
 def tokenize(text: str) -> list[str]:
-    return [stem(t) for t in _TOKEN_RE.findall(text.lower()) if t not in STOPWORDS]
+    tokens = _TOKEN_RE.findall(text.lower())
+    return [stem(t) for t in tokens if t not in STOPWORDS and (len(t) > 1 or t.isdigit())]
 
 
 class BM25Index:
