@@ -16,8 +16,10 @@ class Settings(BaseSettings):
     data_dir: Path = BASE_DIR / "data"
 
     # Model servers. Ollama uses its native API, the others speak the OpenAI chat API.
-    ollama_url: str = "http://localhost:11434"
-    llamacpp_url: str = "http://localhost:8080/v1"
+    # 127.0.0.1 and not localhost: on Windows, localhost tries IPv6 first and every new
+    # connection then waits about two seconds before it falls back to IPv4.
+    ollama_url: str = "http://127.0.0.1:11434"
+    llamacpp_url: str = "http://127.0.0.1:8080/v1"
     nim_url: str = "https://integrate.api.nvidia.com/v1"
     nim_api_key: str = ""
     openai_url: str = "https://api.openai.com/v1"

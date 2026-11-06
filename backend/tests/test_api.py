@@ -21,6 +21,29 @@ def client(corpus, data_dir, monkeypatch):
 # ------------------------------------------------------------------------ basics
 
 
+def test_runs_left_running_by_a_stopped_server_are_marked_failed(corpus, data_dir):
+    from app.models import BenchmarkRun, EvalDataset, EvalRun
+
+    db = Database("sqlite://")
+    create_app(Settings(data_dir=data_dir), db, corpus)
+    with db.session() as session:
+        dataset = session.query(EvalDataset).one()
+        session.add(EvalRun(dataset_id=dataset.id, agent_version_id=1, status="running"))
+        session.add(BenchmarkRun(prompt_set="qa-short", status="queued"))
+
+    restarted = TestClient(create_app(Settings(data_dir=data_dir), db, corpus))
+    run = restarted.get("/api/evals/runs/1").json()
+    assert run["status"] == "failed"
+    assert "restart" in run["error"]
+    assert restarted.get("/api/benchmarks/runs/1").json()["status"] == "failed"
+
+
+def test_default_urls_avoid_the_slow_localhost_lookup():
+    settings = Settings()
+    assert "localhost" not in settings.ollama_url
+    assert "localhost" not in settings.llamacpp_url
+
+
 def test_health(client):
     body = client.get("/api/health").json()
     assert body["status"] == "ok"
